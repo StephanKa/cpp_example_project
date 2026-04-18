@@ -1,0 +1,189 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "windows-2019-msvc-debug",
+      "generator": "Visual Studio 16 2019",
+      "displayName": "Visual Studio 16 2019 Debug",
+      "description": "Target Windows with the msvc compiler, debug build type",
+      "inherits": "conf-windows-common",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-2019-msvc-release",
+      "generator": "Visual Studio 16 2019",
+      "displayName": "Visual Studio 16 2019 Release",
+      "description": "Target Windows with the msvc compiler, release build type",
+      "inherits": "conf-windows-common",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "windows-2022-msvc-debug",
+      "generator": "Visual Studio 17 2022",
+      "displayName": "Visual Studio 17 2022 Debug",
+      "description": "Target Windows with the msvc compiler, debug build type",
+      "inherits": "conf-windows-common",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-2022-msvc-release",
+      "generator": "Visual Studio 17 2022",
+      "displayName": "Visual Studio 17 2022 Release",
+      "description": "Target Windows with the msvc compiler, release build type",
+      "inherits": "conf-windows-common",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "windows-clang-debug",
+      "displayName": "Windows Clang Debug",
+      "generator": "Ninja",
+      "description": "Target Windows with the clang compiler, debug build type",
+      "inherits": "conf-windows-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl",
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64"
+        }
+      }
+    },
+    {
+      "name": "windows-clang-release",
+      "displayName": "Windows Clang Release",
+      "generator": "Ninja",
+      "description": "Target Windows with the clang compiler, release build type",
+      "inherits": "conf-windows-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64"
+        }
+      }
+    },
+    {
+      "name": "win32-gcc-x64-mingw-debug",
+      "displayName": "Windows GCC MinGW Debug",
+      "inherits": "conf-common",
+      "environment": {
+        "PATH": "C:/msys64/mingw64/bin;C:/msys64/mingw64/usr/bin;$penv{PATH}"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc.exe",
+        "CMAKE_CXX_COMPILER": "g++.exe",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "win32-gcc-x64-mingw-release",
+      "displayName": "Windows GCC MinGW Release",
+      "inherits": "conf-common",
+      "environment": {
+        "PATH": "C:/msys64/mingw64/bin;$penv{PATH}"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc.exe",
+        "CMAKE_CXX_COMPILER": "g++.exe",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-windows-2019-msvc-debug",
+      "displayName": "Windows MSVC 2019 Debug",
+      "configurePreset": "windows-2019-msvc-debug"
+    },
+    {
+      "name": "build-windows-2019-msvc-release",
+      "displayName": "Windows MSVC 2019 Release",
+      "configurePreset": "windows-2019-msvc-release"
+    },
+    {
+      "name": "build-windows-2022-msvc-debug",
+      "displayName": "Windows MSVC 2022 Debug",
+      "configurePreset": "windows-2022-msvc-debug"
+    },
+    {
+      "name": "build-windows-2022-msvc-release",
+      "displayName": "Windows MSVC 2022 Release",
+      "configurePreset": "windows-2022-msvc-release"
+    },
+    {
+      "name": "build-win32-gcc-x64-mingw-debug",
+      "displayName": "Windows GCC MinGW Debug",
+      "configurePreset": "win32-gcc-x64-mingw-debug"
+    },
+    {
+      "name": "build-win32-gcc-x64-mingw-release",
+      "displayName": "Windows GCC MinGW Release",
+      "configurePreset": "win32-gcc-x64-mingw-release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test-windows-2019-msvc-debug",
+      "displayName": "MSVC 2019 Debug",
+      "inherits": "test-common",
+      "configurePreset": "windows-2019-msvc-debug"
+    },
+    {
+      "name": "test-windows-2019-msvc-release",
+      "displayName": "MSVC 2019 Release",
+      "inherits": "test-common",
+      "configurePreset": "windows-2019-msvc-release"
+    },
+    {
+      "name": "test-windows-2022-msvc-debug",
+      "displayName": "MSVC 2022 Debug",
+      "inherits": "test-common",
+      "configurePreset": "windows-2022-msvc-debug"
+    },
+    {
+      "name": "test-windows-2022-msvc-release",
+      "displayName": "MSVC 2022 Release",
+      "inherits": "test-common",
+      "configurePreset": "windows-2022-msvc-release"
+    },
+    {
+      "name": "test-windows-clang-debug",
+      "displayName": "Windows Clang Debug",
+      "inherits": "test-common",
+      "configurePreset": "windows-clang-debug"
+    },
+    {
+      "name": "test-windows-clang-release",
+      "displayName": "Windows Clang Release",
+      "inherits": "test-common",
+      "configurePreset": "windows-clang-release"
+    },
+    {
+      "name": "test-win32-gcc-x64-mingw-debug",
+      "displayName": "Windows MinGW GCC Debug",
+      "inherits": "test-common",
+      "configuration": "Debug",
+      "configurePreset": "win32-gcc-x64-mingw-debug"
+    },
+    {
+      "name": "test-win32-gcc-x64-mingw-release",
+      "displayName": "Windows MinGW GCC Release",
+      "inherits": "test-common",
+      "configuration": "Release",
+      "configurePreset": "win32-gcc-x64-mingw-release"
+    }
+  ]
+}

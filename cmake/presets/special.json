@@ -1,0 +1,309 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "gcc-arm-debug",
+      "displayName": "GCC ARM Debug",
+      "generator": "Ninja",
+      "toolchainFile": "${sourceDir}/cmake/arm-cortex-gnu/ArmCortexM4Gnu.cmake",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CPP_STARTER_USE_EMBEDDED_TOOLCHAIN": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_SYSTEM_NAME": "Linux",
+        "CMAKE_SYSTEM_PROCESSOR": "armv7l",
+        "CMAKE_TRY_COMPILE_TARGET_TYPE": "STATIC_LIBRARY",
+        "CMAKE_CROSSCOMPILING": "TRUE"
+      }
+    },
+    {
+      "name": "gcc-arm-release",
+      "displayName": "GCC ARM Release",
+      "generator": "Ninja",
+      "toolchainFile": "${sourceDir}/cmake/arm-cortex-gnu/ArmCortexM4Gnu.cmake",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CPP_STARTER_USE_EMBEDDED_TOOLCHAIN": "ON",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_SYSTEM_NAME": "Linux",
+        "CMAKE_SYSTEM_PROCESSOR": "armv7l",
+        "CMAKE_TRY_COMPILE_TARGET_TYPE": "STATIC_LIBRARY",
+        "CMAKE_CROSSCOMPILING": "TRUE"
+      }
+    },
+    {
+      "name": "clang-12-fuzzing",
+      "displayName": "Clang 12 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-12",
+        "CMAKE_CXX_COMPILER": "clang++-12"
+      }
+    },
+    {
+      "name": "clang-13-fuzzing",
+      "displayName": "Clang 13 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-13",
+        "CMAKE_CXX_COMPILER": "clang++-13"
+      }
+    },
+    {
+      "name": "clang-14-fuzzing",
+      "displayName": "Clang 14 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-14",
+        "CMAKE_CXX_COMPILER": "clang++-14"
+      }
+    },
+    {
+      "name": "clang-15-fuzzing",
+      "displayName": "Clang 15 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-15",
+        "CMAKE_CXX_COMPILER": "clang++-15"
+      }
+    },
+    {
+      "name": "clang-16-fuzzing",
+      "displayName": "Clang 16 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-16",
+        "CMAKE_CXX_COMPILER": "clang++-16"
+      }
+    },
+    {
+      "name": "clang-17-fuzzing",
+      "displayName": "Clang 17 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-17",
+        "CMAKE_CXX_COMPILER": "clang++-17"
+      }
+    },
+    {
+      "name": "clang-18-fuzzing",
+      "displayName": "Clang 18 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-18",
+        "CMAKE_CXX_COMPILER": "clang++-18"
+      }
+    },
+    {
+      "name": "clang-19-fuzzing",
+      "displayName": "Clang 19 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-19",
+        "CMAKE_CXX_COMPILER": "clang++-19"
+      }
+    },
+    {
+      "name": "clang-20-fuzzing",
+      "displayName": "Clang 20 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-20",
+        "CMAKE_CXX_COMPILER": "clang++-20"
+      }
+    },
+    {
+      "name": "clang-21-fuzzing",
+      "displayName": "Clang 21 fuzzer test",
+      "inherits": "common-fuzzing-conf",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-21",
+        "CMAKE_CXX_COMPILER": "clang++-21"
+      }
+    },
+    {
+      "name": "clang-15-qt",
+      "displayName": "Clang 15 QT",
+      "inherits": "conf-unixlike-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-15",
+        "CMAKE_CXX_COMPILER": "clang++-15",
+        "CPP_STARTER_USE_SML": "OFF",
+        "CPP_STARTER_USE_BOOST_BEAST": "OFF",
+        "CPP_STARTER_USE_CROW": "OFF",
+        "CPP_STARTER_USE_CPPZMQ_PROTO": "OFF",
+        "CPP_STARTER_USE_QT": "ON"
+      },
+      "environment": {
+        "NOT_ON_C3I": "1",
+        "CONFIGURE_QT": "1"
+      }
+    },
+    {
+      "name": "clang-18-qt",
+      "displayName": "Clang 18 QT",
+      "inherits": "conf-unixlike-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-18",
+        "CMAKE_CXX_COMPILER": "clang++-18",
+        "CPP_STARTER_USE_SML": "OFF",
+        "CPP_STARTER_USE_BOOST_BEAST": "OFF",
+        "CPP_STARTER_USE_CROW": "OFF",
+        "CPP_STARTER_USE_CPPZMQ_PROTO": "OFF",
+        "CPP_STARTER_USE_QT": "ON"
+      },
+      "environment": {
+        "NOT_ON_C3I": "1",
+        "CONFIGURE_QT": "1"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-gcc-arm-debug",
+      "displayName": "Linux GCC ARM Debug",
+      "configurePreset": "gcc-arm-debug"
+    },
+    {
+      "name": "build-gcc-arm-release",
+      "displayName": "Linux GCC ARM Release",
+      "configurePreset": "gcc-arm-release"
+    },
+    {
+      "name": "build-clang-12-fuzzing",
+      "displayName": "Linux Clang 12 Fuzzing",
+      "configurePreset": "clang-12-fuzzing"
+    },
+    {
+      "name": "build-clang-13-fuzzing",
+      "displayName": "Linux Clang 13 Fuzzing",
+      "configurePreset": "clang-13-fuzzing"
+    },
+    {
+      "name": "build-clang-14-fuzzing",
+      "displayName": "Linux Clang 14 Fuzzing",
+      "configurePreset": "clang-14-fuzzing"
+    },
+    {
+      "name": "build-clang-15-fuzzing",
+      "displayName": "Linux Clang 15 Fuzzing",
+      "configurePreset": "clang-15-fuzzing"
+    },
+    {
+      "name": "build-clang-16-fuzzing",
+      "displayName": "Linux Clang 16 Fuzzing",
+      "configurePreset": "clang-16-fuzzing"
+    },
+    {
+      "name": "build-clang-17-fuzzing",
+      "displayName": "Linux Clang 17 Fuzzing",
+      "configurePreset": "clang-17-fuzzing"
+    },
+    {
+      "name": "build-clang-18-fuzzing",
+      "displayName": "Linux Clang 18 Fuzzing",
+      "configurePreset": "clang-18-fuzzing"
+    },
+    {
+      "name": "build-clang-19-fuzzing",
+      "displayName": "Linux Clang 19 Fuzzing",
+      "configurePreset": "clang-19-fuzzing"
+    },
+    {
+      "name": "build-clang-20-fuzzing",
+      "displayName": "Linux Clang 20 Fuzzing",
+      "configurePreset": "clang-20-fuzzing"
+    },
+    {
+      "name": "build-clang-21-fuzzing",
+      "displayName": "Linux Clang 21 Fuzzing",
+      "configurePreset": "clang-21-fuzzing"
+    },
+    {
+      "name": "build-clang-15-qt",
+      "displayName": "Linux Clang 15 QT",
+      "configurePreset": "clang-15-qt"
+    },
+    {
+      "name": "build-clang-18-qt",
+      "displayName": "Linux Clang 18 QT",
+      "configurePreset": "clang-18-qt"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test-clang-12-fuzzing",
+      "displayName": "Linux Clang 12 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-12-fuzzing"
+    },
+    {
+      "name": "test-clang-13-fuzzing",
+      "displayName": "Linux Clang 13 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-13-fuzzing"
+    },
+    {
+      "name": "test-clang-14-fuzzing",
+      "displayName": "Linux Clang 14 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-14-fuzzing"
+    },
+    {
+      "name": "test-clang-15-fuzzing",
+      "displayName": "Linux Clang 15 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-15-fuzzing"
+    },
+    {
+      "name": "test-clang-16-fuzzing",
+      "displayName": "Linux Clang 16 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-16-fuzzing"
+    },
+    {
+      "name": "test-clang-17-fuzzing",
+      "displayName": "Linux Clang 17 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-17-fuzzing"
+    },
+    {
+      "name": "test-clang-18-fuzzing",
+      "displayName": "Linux Clang 18 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-18-fuzzing"
+    },
+    {
+      "name": "test-clang-19-fuzzing",
+      "displayName": "Linux Clang 19 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-19-fuzzing"
+    },
+    {
+      "name": "test-clang-20-fuzzing",
+      "displayName": "Linux Clang 20 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-20-fuzzing"
+    },
+    {
+      "name": "test-clang-21-fuzzing",
+      "displayName": "Linux Clang 21 Fuzzing",
+      "inherits": "test-common",
+      "configurePreset": "clang-21-fuzzing"
+    },
+    {
+      "name": "test-clang-15-qt",
+      "displayName": "Linux Clang 15 QT",
+      "inherits": "test-common",
+      "configurePreset": "clang-15-qt"
+    },
+    {
+      "name": "test-clang-18-qt",
+      "displayName": "Linux Clang 18 QT",
+      "inherits": "test-common",
+      "configurePreset": "clang-18-qt"
+    }
+  ]
+}
