@@ -1,383 +1,380 @@
 # cpp_example_project
 
+[![CMake](https://github.com/Zuehlke/cpp_example_project/workflows/CMake/badge.svg)](https://github.com/Zuehlke/cpp_example_project/actions)
+
 Ongoing project of the Zühlke Germany **Modern C++ Topic Group**.
 
-With this project, we want to provide an example and starting point for C++ projects (embedded and otherwise), especially regarding tooling.
+This project provides a batteries-included starting point for modern C++ projects — both desktop and embedded — with a strong focus on tooling, static analysis, and best practices.
 
-The project has initially been forked/copied from [Jason Turner's cpp_starter_project](https://github.com/lefticus/cpp_starter_project) and is customised by Zühlke members and adapted to [Jason Turner's cmake_conan_boilerplate_template](https://github.com/cpp-best-practices/cmake_conan_boilerplate_template).
-It also uses CMake structure from [Jason Turner's cmake_template](https://github.com/cpp-best-practices/cmake_template) repository.
+Inspired by and adapted from:
+- [Jason Turner's cpp_starter_project](https://github.com/lefticus/cpp_starter_project)
+- [cmake_conan_boilerplate_template](https://github.com/cpp-best-practices/cmake_conan_boilerplate_template)
+- [cmake_template](https://github.com/cpp-best-practices/cmake_template)
 
-## Build Status
+---
 
-![CMake](https://github.com/Zuehlke/cpp_example_project/workflows/CMake/badge.svg)
+## Features
+
+| Area | Details |
+|---|---|
+| **Build system** | CMake ≥ 3.25 with [CMakePresets v6](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) |
+| **Package manager** | [Conan 2](https://docs.conan.io/2/) with `conan_provider.cmake` |
+| **Compilers** | GCC 10–15, Clang 12–21, MSVC 2019/2022 |
+| **C++ standard** | C++17/20/23/26 (configurable) |
+| **Static analysis** | clang-tidy, cppcheck, include-what-you-use |
+| **Sanitizers** | ASan, LSan, UBSan, TSan, MSan (mutually exclusive where required) |
+| **Formatting** | clang-format, cmake-format |
+| **Testing** | Catch2, GoogleTest, libFuzzer |
+| **Documentation** | Doxygen + Graphviz |
+| **Caching** | ccache / sccache |
+| **CI** | GitHub Actions (multi-compiler matrix) |
+| **Dev container** | VS Code devcontainer + Docker Compose |
+
+### Example sub-projects
+
+| Example | Library | Description |
+|---|---|---|
+| `src/sml` | [Boost.SML](https://boost-ext.github.io/sml/) | Compile-time state machine |
+| `src/boost.beast` | [Boost.Beast](https://www.boost.org/doc/libs/release/libs/beast/) | HTTP/WebSocket server |
+| `src/crow` | [Crow](https://crowcpp.org/) | Lightweight REST API |
+| `src/open62541` | [open62541](https://www.open62541.org/) | OPC UA server & client |
+| `src/open62541pp` | [open62541pp](https://github.com/open62541pp/open62541pp) | C++ OPC UA wrapper |
+| `src/protobuf.cppzmq` | Protobuf + cppzmq | Pub/sub messaging |
+| `src/imgui` | [Dear ImGui](https://github.com/ocornut/imgui) (GLFW + OpenGL3) | Cross-platform GUI |
+| `src/slint` | [Slint](https://slint.dev/) | Declarative UI (FetchContent) |
+| `src/qt` | Qt 6 QML | QML timer app with C++ backend |
+| `src/embedded` | ARM Cortex-M4 | Bare-metal cross-compilation |
+| `test/catch2` | Catch2 | Unit + constexpr tests |
+| `test/gtest` | GoogleTest | Unit + constexpr tests |
+| `fuzz_test` | libFuzzer | Fuzz testing harness |
 
 ## Getting Started
 
-### Use the Github template
+### Use as a GitHub template
 
-First, click the green `Use this template` button near the top of this page.
-This will take you to Github's ['Generate Repository'](https://github.com/Zuehlke/cpp_example_project/generate) page.
-Fill in a repository name and short description, and click 'Create repository from template'.
-This will allow you to create a new repository in your Github account,
-prepopulated with the contents of this project.
-Now you can clone the project locally and get to work!
+Click the green **Use this template** button near the top of this page, fill in a repository name, and clone:
 
-    $ git clone https://github.com/<user>/<your_new_repo>.git
+```bash
+git clone https://github.com/<user>/<your_new_repo>.git
+```
 
-### Necessary Dependencies
+### Dev Container (recommended)
 
-A C++ compiler that supports at least C++17.
-See [cppreference.com](https://en.cppreference.com/w/cpp/compiler_support)
-to see which features are supported by each compiler.
-The following compilers should work:
+The fastest way to get a fully configured environment is via the VS Code Dev Container or Docker Compose:
 
-  * [gcc 10+](https://gcc.gnu.org/)
-    <details>
-    <summary>Install command</summary>
+```bash
+# Dev environment with all compilers, tools, and Conan pre-installed
+docker compose -f docker/docker-compose-dev.yml up -d
+```
 
-    - Debian/Ubuntu:
+Or open the folder in VS Code and click **Reopen in Container** when prompted.
 
-            sudo apt install build-essential
+---
 
-    - Windows:
+## Prerequisites
 
-            choco install mingw -y
+### Required
 
-    - MacOS:
+| Tool | Minimum version | Install |
+|---|---|---|
+| CMake | 3.25 | `apt install cmake` · `choco install cmake` · `brew install cmake` |
+| Conan | 2.x | `pip install conan` · `choco install conan` · `brew install conan` |
+| GCC **or** Clang | gcc 10+ / clang 12+ | see below |
 
-            brew install gcc
-    </details>
+<details>
+<summary>GCC install</summary>
 
-  * [clang 12+](https://clang.llvm.org/)
-    <details>
-    <summary>Install command</summary>
+```bash
+# Debian/Ubuntu
+sudo apt install build-essential          # GCC system version
+sudo apt install gcc-14 g++-14            # specific version
 
-    - Debian/Ubuntu:
+# macOS
+brew install gcc
 
-            bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+# Windows
+choco install mingw -y
+```
+</details>
 
-    - Windows:
+<details>
+<summary>Clang install</summary>
 
-        Visual Studio 2019 ships with LLVM (see the Visual Studio section). However, to install LLVM separately:
+```bash
+# Debian/Ubuntu (installs any version via LLVM script)
+bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
-            choco install llvm -y
+# macOS
+brew install llvm
 
-        llvm-utils for using external LLVM with Visual Studio generator:
+# Windows (bundled with Visual Studio, or standalone)
+choco install llvm -y
+```
+</details>
 
-            git clone https://github.com/zufuliu/llvm-utils.git
-            cd llvm-utils/VS2017
-            .\install.bat
+<details>
+<summary>Visual Studio 2019/2022</summary>
 
-    - MacOS:
+```powershell
+choco install -y visualstudio2022community --package-parameters `
+  "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive"
 
-            brew install llvm
-    </details>
+# Add MSVC + Clang + vcvarsall to PATH
+choco install vswhere -y; refreshenv
+$clpath       = vswhere -products * -latest -find **/Hostx64/x64/*
+$clangpath    = vswhere -products * -latest -find **/Llvm/bin/*
+$vcvarsall    = vswhere -products * -latest -find **/Auxiliary/Build/*
+$path = [Environment]::GetEnvironmentVariable("PATH","User")
+[Environment]::SetEnvironmentVariable("Path","$path;$clpath;$clangpath;$vcvarsall","User")
+refreshenv
+```
+</details>
 
-  * [Visual Studio 2019 or higher](https://visualstudio.microsoft.com/)
-    <details>
-    <summary>Install command + Environment setup</summary>
+### Optional tools
 
-    On Windows, you need to install Visual Studio 2019 because of the SDK and libraries that ship with it.
+| Tool | Purpose | Install |
+|---|---|---|
+| [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) | Static analysis | bundled with LLVM |
+| [cppcheck](http://cppcheck.sourceforge.net/) | Static analysis | `apt install cppcheck` |
+| [include-what-you-use](https://include-what-you-use.org/) | Header analysis | [build from source](https://github.com/include-what-you-use/include-what-you-use#how-to-install) |
+| [ccache](https://ccache.dev/) | Compiler cache | `apt install ccache` |
+| [Doxygen](https://www.doxygen.nl/) + Graphviz | API docs | `apt install doxygen graphviz` |
 
-      Visual Studio IDE - 2019 Community (installs Clang too):
-
-            choco install -y visualstudio2019community --package-parameters "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --includeOptional --passive --locale en-US"
-
-    Put MSVC compiler, Clang compiler, and vcvarsall.bat on the path:
-
-            choco install vswhere -y
-            refreshenv
-
-            # change to x86 for 32bit
-            $clpath = vswhere -products * -latest -prerelease -find **/Hostx64/x64/*
-            $clangpath = vswhere -products * -latest -prerelease -find **/Llvm/bin/*
-            $vcvarsallpath =  vswhere -products * -latest -prerelease -find **/Auxiliary/Build/*
-
-            $path = [System.Environment]::GetEnvironmentVariable("PATH", "User")
-            [Environment]::SetEnvironmentVariable("Path", $path + ";$clpath" + ";$clangpath" + ";$vcvarsallpath", "User")
-            refreshenv
-
-    </details>
-
-  * [Conan](https://conan.io/)
-    <details>
-    <summary>Install Command</summary>
-
-    - Via pip - https://docs.conan.io/en/latest/installation.html#install-with-pip-recommended
-
-            pip install --user conan
-
-    - Windows:
-
-            choco install conan -y
-
-    - MacOS:
-
-            brew install conan
-
-    </details>
-
-  * [CMake 3.21+](https://cmake.org/) 
-   
-    This repository uses [CMakePresets](https://cmake.org/cmake/help/latest/guide/user-interaction/index.html#presets).
-    <details>
-    <summary>Install Command</summary>
-
-    - Debian/Ubuntu:
-
-            sudo apt-get install cmake
-
-    - Windows:
-
-            choco install cmake -y
-
-    - MacOS:
-
-            brew install cmake
-
-    </details>
-
-### Optional Dependencies
-#### C++ Tools
-  * [Doxygen](http://doxygen.nl/)
-    <details>
-    <summary>Install Command</summary>
-
-    - Debian/Ubuntu:
-
-            sudo apt-get install doxygen
-            sudo apt-get install graphviz
-
-    - Windows:
-
-            choco install doxygen.install -y
-            choco install graphviz -y
-
-    - MacOS:
-
-            brew install doxygen
-            brew install graphviz
-
-    </details>
-
-
-  * [ccache](https://ccache.dev/)
-    <details>
-    <summary>Install Command</summary>
-
-    - Debian/Ubuntu:
-
-            sudo apt-get install ccache
-
-    - Windows:
-
-            choco install ccache -y
-
-    - MacOS:
-
-            brew install ccache
-
-    </details>
-
-
-  * [Cppcheck](http://cppcheck.sourceforge.net/)
-    <details>
-    <summary>Install Command</summary>
-
-    - Debian/Ubuntu:
-
-            sudo apt-get install cppcheck
-
-    - Windows:
-
-            choco install cppcheck -y
-
-    - MacOS:
-
-            brew install cppcheck
-
-    </details>
-
-
-  * [include-what-you-use](https://include-what-you-use.org/)
-    <details>
-    <summary>Install Command</summary>
-
-    Follow instructions here:
-    https://github.com/include-what-you-use/include-what-you-use#how-to-install
-    </details>
+---
 
 ## Build Instructions
 
-All defined presets have the following scheme:
+Presets are split across `cmake/presets/` and follow a consistent naming scheme:
 
-| Preset stage  | scheme                    | description                                                              |
-|---------------|---------------------------|--------------------------------------------------------------------------|
-| build         | **build-**\<PRESET_NAME\> | This stage is used for compiling the project                             |
-| configuration | \<PRESET_NAME\>           | This stage is used for configure the project with defined compiler setup |
-| test          | **test-**\<PRESET_NAME\>  | This stage is used to run all test registered for ctest                  |
+| Stage | Pattern | Example |
+|---|---|---|
+| Configure | `<preset-name>` | `unixlike-gcc-14-debug` |
+| Build | `build-<preset-name>` | `build-unixlike-gcc-14-debug` |
+| Test | `test-<preset-name>` | `test-unixlike-gcc-14-debug` |
 
-### Configure your build
+### 1. Install Conan dependencies
 
-To configure the project and write makefiles, you could use `cmake` with a bunch of command line options.
-The easier option is to run cmake interactively:
+```bash
+conan install . --build=missing -pr:h=default -pr:b=default
+```
 
-#### **Configure via cmake preset**:
+### 2. Configure
 
-Check the preset which can be applied to your build system by typing:
+```bash
+# List all available presets
+cmake --list-presets
 
-    cmake --list-presets
+# Example: GCC 14 debug on Linux/macOS
+cmake --preset unixlike-gcc-14-debug
 
-The output looks like this:
+# Example: Clang 18 release
+cmake --preset unixlike-clang-18-release
 
-    Available configure presets:
+# Windows (Visual Studio 2022)
+cmake --preset windows-msvc-debug
+```
 
-    "unixlike-gcc-10-debug"       - GCC 10 Debug
-    "unixlike-gcc-10-release"     - GCC 10 Release
-    "unixlike-gcc-11-debug"       - GCC 11 Debug
-    "unixlike-gcc-11-release"     - GCC 11 Release
-    "unixlike-gcc-12-debug"       - GCC 12 Debug
-    "unixlike-gcc-12-release"     - GCC 12 Release
-    "unixlike-gcc-13-debug"       - GCC 13 Debug
-    "unixlike-gcc-13-release"     - GCC 13 Release
-    "unixlike-gcc-14-debug"       - GCC 14 Debug
-    "unixlike-gcc-14-release"     - GCC 14 Release
-    "unixlike-clang-12-debug"     - Clang 12 Debug
-    "unixlike-clang-12-release"   - Clang 12 Release
-    "unixlike-clang-13-debug"     - Clang 13 Debug
-    "unixlike-clang-13-release"   - Clang 13 Release
-    "unixlike-clang-14-debug"     - Clang 14 Debug
-    "unixlike-clang-14-release"   - Clang 14 Release
-    "unixlike-clang-15-debug"     - Clang 15 Debug
-    "unixlike-clang-15-release"   - Clang 15 Release
-    "unixlike-clang-16-debug"     - Clang 16 Debug
-    "unixlike-clang-16-release"   - Clang 16 Release
-    "unixlike-clang-17-debug"     - Clang 17 Debug
-    "unixlike-clang-17-release"   - Clang 17 Release
-    "unixlike-clang-18-debug"     - Clang 18 Debug
-    "unixlike-clang-18-release"   - Clang 18 Release
-    "unixlike-clang-19-debug"     - Clang 19 Debug
-    "unixlike-clang-19-release"   - Clang 19 Release
+### 3. Build
 
-Choose a configuration which is suitable and use following command for example.
+```bash
+cmake --build --preset build-unixlike-gcc-14-debug
+```
 
-    cmake --preset unixlike-clang-15-debug
+### 4. Test
 
-### Build
-Once you have selected all the options you would like to use, you can build the
-project (all targets):
+```bash
+ctest --preset test-unixlike-gcc-14-debug
+```
 
-    cmake --preset <PRESET_NAME>
+### Available compiler presets
 
-For example:
-    
-    cmake --preset build-unixlike-clang-15-debug
+<details>
+<summary>GCC (Linux)</summary>
 
-### Test
-Run all test using preset and ctest:
+`unixlike-gcc-{10..15}-{debug,release}`
 
-    cmake --preset <PRESET_NAME>
+</details>
 
-For example:
+<details>
+<summary>Clang (Linux)</summary>
 
-    cmake --preset test-unixlike-clang-15-debug
+`unixlike-clang-{12..21}-{debug,release}`
 
+Static analysis variants (clang-tidy + cppcheck):
+`unixlike-clang-{15..21}-{debug,release}-static-analysis`
 
-## Possible option
+</details>
 
-| Option  | Comment | Default |
-| ------- | -------- | -------- |
-| ENABLE_PCH | Enable Precompiled Headers | OFF |
-| _**Static analyzers**_ |
-| ENABLE_CPPCHECK | Enable static analysis with cppcheck | OFF |
-| ENABLE_CLANG_TIDY | Enable static analysis with clang-tidy | OFF |
-| ENABLE_INCLUDE_WHAT_YOU_USE | Enable static analysis with include-what-you-use | OFF |
-| _**Tooling**_ |
-| ENABLE_CACHE | Enable cache if available | ON |
-| ENABLE_DOXYGEN | Enable doxygen doc builds of source | OFF |
-| _**Sanitizers**_ |
-| ENABLE_SANITIZER_UNDEFINED_BEHAVIOR | Enable undefined behavior sanitizer | OFF |
-| ENABLE_SANITIZER_THREAD | Enable thread sanitizer | OFF |
-| ENABLE_SANITIZER_MEMORY | Enable memory sanitizer | OFF |
-| ENABLE_SANITIZER_ADDRESS | Enable address sanitizer | OFF |
-| ENABLE_SANITIZER_LEAK | Enable leak sanitizer | OFF |
-| _**Others**_ |
-| ENABLE_COVERAGE | Enable coverage reporting for gcc/clang | OFF |
-| ENABLE_IPO | Enable Interprocedural Optimization, aka Link Time Optimization (LTO) | OFF |
-| WARNINGS_AS_ERRORS | Treat compiler warnings as errors | ON |
-| BUILD_SHARED_LIBS | Enable compilation of shared libraries | OFF |
-| ENABLE_TESTING | Enable Test Builds | ON |
-| ENABLE_FUZZING | Enable Fuzzing Builds | OFF |
-| _**Examples**_ |
-| CPP_STARTER_USE_SML | Enable compilation of SML sample | OFF |
-| CPP_STARTER_USE_BOOST_BEAST | Enable compilation of boost beast sample | OFF |
-| CPP_STARTER_USE_CROW | Enable compilation of crow sample | OFF |
-| CPP_STARTER_USE_CPPZMQ_PROTO | Enable compilation of protobuf and cppzmq sample | OFF |
-| CPP_STARTER_USE_EMBEDDED_TOOLCHAIN | Enable compilation of an example cortex m4 project | OFF |
-| CPP_STARTER_USE_QT | Enable compilation of an example QT project | | OFF |
-| _**Test frameworks**_ |
-| CPP_STARTER_USE_CATCH2 | Enable compilation of an example test project using catch2 | ON |
-| CPP_STARTER_USE_GTEST | Enable compilation of an example test project using googletest | ON |
+<details>
+<summary>Windows</summary>
 
+`windows-msvc-{debug,release}`, `windows-clang-cl-{debug,release}`
+
+</details>
+
+<details>
+<summary>Special</summary>
+
+- ARM cross-compile: `arm-cortex-m4`
+- Fuzzing (Clang): `fuzzing-clang-{12..21}`
+- Qt: `unixlike-qt-clang-{15..21}-debug`
+
+</details>
+
+### Enabling example sub-projects
+
+Pass `-D` options during configuration, or set them in your `CMakeUserPresets.json`:
+
+```bash
+cmake --preset unixlike-gcc-14-debug \
+  -DCPP_STARTER_USE_SML=ON \
+  -DCPP_STARTER_USE_IMGUI=ON \
+  -DCPP_STARTER_USE_QT=ON
+```
+
+> **Note:** Make sure the corresponding Conan options are enabled too (see Conan section).
+
+---
+
+## CMake Options Reference
+
+### Build tooling
+
+| Option | Default | Description |
+|---|---|---|
+| `WARNINGS_AS_ERRORS` | `ON` | Treat compiler warnings as errors |
+| `ENABLE_PCH` | `OFF` | Precompiled headers |
+| `ENABLE_CACHE` | `ON` | ccache/sccache if available |
+| `ENABLE_IPO` | `OFF` | Link-time optimisation (LTO) |
+| `ENABLE_DOXYGEN` | `OFF` | Generate Doxygen docs |
+| `ENABLE_COVERAGE` | `OFF` | GCov/LCOV coverage |
+| `ENABLE_BUILD_WITH_TIME_TRACE` | `OFF` | `-ftime-trace` JSON (Clang only) |
+| `BUILD_SHARED_LIBS` | `OFF` | Shared libraries |
+
+### Static analysis
+
+| Option | Default | Description |
+|---|---|---|
+| `ENABLE_CLANG_TIDY` | `OFF` | Run clang-tidy |
+| `ENABLE_CPPCHECK` | `OFF` | Run cppcheck |
+| `ENABLE_INCLUDE_WHAT_YOU_USE` | `OFF` | Run iwyu |
+
+### Testing
+
+| Option | Default | Description |
+|---|---|---|
+| `ENABLE_TESTING` | `ON` | Build test targets |
+| `ENABLE_FUZZING` | `OFF` | Build libFuzzer target (Clang only) |
+| `CPP_STARTER_USE_CATCH2` | `ON` | Catch2 test suite |
+| `CPP_STARTER_USE_GTEST` | `ON` | GoogleTest suite |
+
+### Sanitizers
+
+Sanitizers are mutually exclusive where required — CMake enforces this automatically.
+
+| Option | Default | Conflicts with |
+|---|---|---|
+| `ENABLE_SANITIZER_ADDRESS` | `OFF` | TSan, MSan |
+| `ENABLE_SANITIZER_LEAK` | `OFF` | TSan, MSan |
+| `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR` | `OFF` | — |
+| `ENABLE_SANITIZER_THREAD` | `OFF` | ASan, LSan, MSan |
+| `ENABLE_SANITIZER_MEMORY` | `OFF` | ASan, TSan, LSan |
+
+### Example sub-projects
+
+| Option | Default | Description |
+|---|---|---|
+| `CPP_STARTER_USE_SML` | `OFF` | Boost.SML state machine |
+| `CPP_STARTER_USE_BOOST_BEAST` | `OFF` | HTTP/WebSocket server |
+| `CPP_STARTER_USE_CROW` | `OFF` | REST API server |
+| `CPP_STARTER_USE_CPPZMQ_PROTO` | `OFF` | Protobuf + ZeroMQ messaging |
+| `CPP_STARTER_USE_OPEN62541` | `OFF` | OPC UA (C) |
+| `CPP_STARTER_USE_OPEN62541PP` | `OFF` | OPC UA (C++ wrapper) |
+| `CPP_STARTER_USE_SLINT` | `OFF` | Slint declarative UI |
+| `CPP_STARTER_USE_IMGUI` | `OFF` | Dear ImGui (GLFW + OpenGL3) |
+| `CPP_STARTER_USE_QT` | `OFF` | Qt 6 QML example |
+| `CPP_STARTER_USE_EMBEDDED_TOOLCHAIN` | `OFF` | ARM Cortex-M4 cross-compile |
+
+---
+
+## Conan Options
+
+Feature options in `conanfile.py` control which libraries are fetched. They mirror the CMake options above.
+
+```bash
+conan install . --build=missing \
+  -o use_sml=True \
+  -o use_imgui=True \
+  -o use_qt=True
+```
+
+| Option | Default |
+|---|---|
+| `use_sml` | `True` |
+| `use_boost_beast` | `True` |
+| `use_crow` | `True` |
+| `use_cppzmq_proto` | `False` |
+| `use_qt` | `False` |
+| `use_open62541` | `True` |
+| `use_open62541pp` | `True` |
+| `use_slint` | `True` |
+| `use_imgui` | `True` |
+
+> `slint` and `open62541pp` are fetched via CMake FetchContent at configure time, not through Conan, but the options still control whether their CMake targets are built.
+
+---
+
+## Project Structure
+
+```
+cmake/              # CMake modules and toolchain files
+cmake/presets/      # Preset definitions (base, gcc, clang, windows, special)
+src/                # Source examples (one subdirectory per library)
+test/               # Test suites (Catch2, GoogleTest)
+fuzz_test/          # libFuzzer harness
+templates/          # version.hpp.in for git-hash stamping
+docker/             # Dockerfile + docker-compose for CI and dev
+.devcontainer/      # VS Code Dev Container configuration
+```
+
+---
 
 ## Troubleshooting
 
 ### Update Conan
-Many problems that users have can be resolved by updating Conan, so if you are
-having any trouble with this project, you should start by doing that.
 
-To update conan:
-
-    $ pip install --user --upgrade conan
-
-You may need to use `pip3` instead of `pip` in this command, depending on your
-platform.
+```bash
+pip install --user --upgrade conan
+```
 
 ### Clear Conan cache
-If you continue to have trouble with your Conan dependencies, you can try
-clearing your Conan cache:
 
-    $ conan remove -f '*'
+```bash
+conan remove -c '*'
+```
 
-The next time you run `cmake`, your Conan dependencies will
-be rebuilt.
+### Regenerate CMake build directory
 
-### Identifying misconfiguration of Conan dependencies
+```bash
+rm -rf cmake-build-*/   # or the specific build dir
+cmake --preset <preset>
+```
 
-If you have a dependency 'A' that requires a specific version of another
-dependency 'B', and your project is trying to use the wrong version of
-dependency 'B', Conan will produce warnings about this configuration error
-when you run CMake. These warnings can easily get lost between a couple
-hundred or a thousand lines of output, depending on the size of your project.
-
-If your project has a Conan configuration error, you can use `conan info` to
-find it. `conan info` displays information about the dependency graph of your
-project, with colorized output in some terminals.
-
-    $ cd build
-    $ conan info .
-
-In my terminal, the first couple lines of `conan info`'s output show all the
-project's configuration warnings in a bright yellow font.
-
-For example, the package `spdlog/1.5.0` depends on the package `fmt/6.1.2`.
-If you were to modify the file `cmake/Conan.cmake` so that it requires an
-earlier version of `fmt`, such as `fmt/6.0.0`, and then run:
-
-    $ conan remove -f '*'       # clear Conan cache
-    $ rm -rf build              # clear previous CMake build
-    $ mkdir build && cd build
-    $ cmake ..                  # rebuild Conan dependencies
-    $ conan info .
-
-...the first line of output would be a warning that `spdlog` needs a more recent
-version of `fmt`.
+---
 
 ## Testing
 
-- See [Catch2 tutorial](https://github.com/catchorg/Catch2/blob/master/docs/tutorial.md)
-- See [Googletest tutorial](http://google.github.io/googletest/)
+- [Catch2 tutorial](https://github.com/catchorg/Catch2/blob/master/docs/tutorial.md)
+- [GoogleTest primer](http://google.github.io/googletest/)
 
 ## Fuzz testing
 
-- See [libFuzzer Tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md)
+Fuzzing targets require a Clang-based preset with `ENABLE_FUZZING=ON` or a `fuzzing-clang-*` preset:
+
+```bash
+cmake --preset fuzzing-clang-18
+cmake --build --preset build-fuzzing-clang-18
+./fuzz_test/fuzz_tester -max_total_time=60
+```
+
+See the [libFuzzer tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md) for details.
