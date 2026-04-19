@@ -1,6 +1,7 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.21)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.25)
 
 INCLUDE(cmake/Conan.cmake)
+INCLUDE(cmake/ProjectSettings.cmake)
 
 # strongly encouraged to enable this globally to avoid conflicts between
 # -Wpedantic being enabled and -std=c++20 and -std=gnu++20 for example
@@ -10,15 +11,9 @@ SET(CMAKE_CXX_EXTENSIONS OFF)
 INCLUDE(cmake/Options.cmake)
 
 # Set the project name to your project name, my project isn't very descriptive
-PROJECT(myproject
+PROJECT(${PROJECT_NAME}
         LANGUAGES CXX
-        VERSION 0.0.1)
-
-IF(NOT DEFINED CXX_STANDARD)
-    SET(CXX_STANDARD 20)
-ENDIF()
-
-SET(CMAKE_CXX_STANDARD ${CXX_STANDARD})
+        VERSION ${VERSION})
 
 INCLUDE(cmake/BuildingConfig.cmake)
 SETUP_MULTI_CONFIG()
@@ -37,7 +32,7 @@ CONFIGURE_FILE("templates/version.hpp.in" "${CMAKE_BINARY_DIR}/generated/include
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 ADD_LIBRARY(project_options INTERFACE)
-TARGET_COMPILE_FEATURES(project_options INTERFACE cxx_std_${CXX_STANDARD})
+TARGET_COMPILE_FEATURES(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
 ADD_LIBRARY(project_warnings INTERFACE)
