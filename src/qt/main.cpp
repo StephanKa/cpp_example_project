@@ -1,6 +1,22 @@
 
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
-int main()
+int main(int argc, char *argv[])
 {
-    return 0;
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+
+    const QUrl url(u"qrc:/qt_example/ui/main.qml"_qs);
+    QObject::connect(
+        &engine,
+        &QQmlApplicationEngine::objectCreationFailed,
+        &app,
+        []() { QCoreApplication::exit(-1); },
+        Qt::QueuedConnection);
+
+    engine.load(url);
+
+    return app.exec();
 }

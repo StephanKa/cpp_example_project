@@ -46,6 +46,9 @@ class CppExampleProjectConan(ConanFile):
         "fmt/*:header_only": True,
         "spdlog/*:header_only": True,
         "qt/*:with_fontconfig": False,
+        "qt/*:qtdeclarative": True,       # QML + Quick
+        "qt/*:qtshadertools": True,        # required by QtQuick
+        "qt/*:qtquickcontrols2": True,     # ApplicationWindow, Button, etc.
         "open62541/*:cpp_compatible": True,
     }
 
