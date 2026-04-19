@@ -54,7 +54,12 @@ IF(CPP_STARTER_USE_SLINT)
     ADD_SUBDIRECTORY(slint)
 ENDIF()
 
-FIND_PACKAGE(docopt REQUIRED)
+# imgui example
+IF(CPP_STARTER_USE_IMGUI)
+    MESSAGE("Using imgui")
+    ADD_SUBDIRECTORY(imgui)
+ENDIF()
+
 FIND_PACKAGE(spdlog REQUIRED)
 FIND_PACKAGE(fmt REQUIRED)
 # Generic test that uses conan libs

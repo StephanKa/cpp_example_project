@@ -106,6 +106,7 @@ class CppExampleProjectConan(ConanFile):
         if self.options.use_imgui:
             self.requires("imgui/1.90.5")
             self.requires("implot/0.16")
+            self.requires("glfw/3.4")
 
     # 4. call for conan install
     def build_requirements(self):
