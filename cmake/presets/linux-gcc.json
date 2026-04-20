@@ -1,5 +1,8 @@
 {
-  "version": 6,
+  "version": 7,
+  "include": [
+    "base.json"
+  ],
   "configurePresets": [
     {
       "name": "unixlike-gcc-10-debug",
