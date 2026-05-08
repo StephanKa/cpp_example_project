@@ -24,12 +24,12 @@ variables:
 docker:ci-image:
   extends: .docker-build
   script:
-    - cd docker && ./build-ci-image.sh
+    - cd docker && DOCKER_BUILDKIT=1 docker build --target cpp-docker-ci --build-arg CI_USER=ci -t cpp_ci_env:latest .
 
 docker:dev-image:
   extends: .docker-build
   script:
-    - cd docker && ./build-dev-image.sh
+    - cd docker && DOCKER_BUILDKIT=1 docker build --target cpp-docker-dev --build-arg DEV_USER=dev -t cpp_dev_env:latest .
 
 docker:devcontainer:
   extends: .docker-build
