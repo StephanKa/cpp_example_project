@@ -1,4 +1,4 @@
-SET(PROJECT_NAME myproject)
+SET(PROJECT_NAME myproject CACHE STRING "The project name" FORCE)
 SET(VERSION 0.0.1)
 
 # C++ standard — override at configure time with -DCXX_STANDARD=23 etc.
