@@ -17,12 +17,15 @@ variables:
   stage: docker
   image: docker:latest
   services:
-    - docker:dind
+    - name: docker:dind
+      command: ["--tls=false"]
   variables:
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_HOST: "tcp://docker:2376"
-    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-    DOCKER_TLS_VERIFY: "1"
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_VERIFY: "0"
+  before_script:
+    # Wait for the Docker daemon to be ready
+    - until docker info > /dev/null 2>&1; do sleep 1; done
 
 docker:ci-image:
   extends: .docker-build
