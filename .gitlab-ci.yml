@@ -63,7 +63,7 @@ docker:devcontainer:
       - .ccache/
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq python3 python3-pip python3-venv cmake ninja-build git wget ccache lsb-release
+    - apt-get install -y -qq python3 python3-pip python3-venv cmake ninja-build git wget ccache lsb-release software-properties-common gnupg
     - python3 -m venv /opt/conan-venv
     - /opt/conan-venv/bin/pip install --upgrade pip setuptools conan
     - export PATH="/opt/conan-venv/bin:$PATH"
