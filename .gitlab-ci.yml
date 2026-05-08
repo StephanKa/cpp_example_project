@@ -15,6 +15,7 @@ variables:
 # ──────────────────────────────────────────────────────────────────────────────
 .docker-build:
   stage: docker
+  allow_failure: true
   image: docker:latest
   services:
     - name: docker:dind
@@ -24,8 +25,8 @@ variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_VERIFY: "0"
   before_script:
-    # Wait for the Docker daemon to be ready
-    - until docker info > /dev/null 2>&1; do sleep 1; done
+    # Wait up to 30 s for the Docker daemon to be ready, then fail clearly
+    - timeout 30 sh -c 'until docker info > /dev/null 2>&1; do sleep 1; done' || (echo "Docker daemon did not start. Is the runner configured with privileged=true?"; exit 1)
 
 docker:ci-image:
   extends: .docker-build
