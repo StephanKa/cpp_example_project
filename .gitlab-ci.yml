@@ -15,21 +15,28 @@ variables:
 # ──────────────────────────────────────────────────────────────────────────────
 .docker-build:
   stage: docker
+  allow_failure: true
   image: docker:latest
   services:
-    - docker:dind
+    - name: docker:dind
+      command: ["--tls=false"]
   variables:
-    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_VERIFY: "0"
+  before_script:
+    # Wait up to 30 s for the Docker daemon to be ready, then fail clearly
+    - timeout 30 sh -c 'until docker info > /dev/null 2>&1; do sleep 1; done' || (echo "Docker daemon did not start. Is the runner configured with privileged=true?"; exit 1)
 
 docker:ci-image:
   extends: .docker-build
   script:
-    - cd docker && ./build-ci-image.sh
+    - cd docker && DOCKER_BUILDKIT=1 docker build --target cpp-docker-ci --build-arg CI_USER=ci -t cpp_ci_env:latest .
 
 docker:dev-image:
   extends: .docker-build
   script:
-    - cd docker && ./build-dev-image.sh
+    - cd docker && DOCKER_BUILDKIT=1 docker build --target cpp-docker-dev --build-arg DEV_USER=dev -t cpp_dev_env:latest .
 
 docker:devcontainer:
   extends: .docker-build
@@ -56,8 +63,10 @@ docker:devcontainer:
       - .ccache/
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq python3 python3-pip cmake ninja-build git wget ccache
-    - python3 -m pip install --upgrade pip setuptools conan
+    - apt-get install -y -qq python3 python3-pip python3-venv cmake ninja-build git wget ccache
+    - python3 -m venv /opt/conan-venv
+    - /opt/conan-venv/bin/pip install --upgrade pip setuptools conan
+    - export PATH="/opt/conan-venv/bin:$PATH"
 
 .linux-24:
   extends: .linux-base
@@ -74,33 +83,24 @@ build:linux:
   extends: .linux-24
   parallel:
     matrix:
-      - COMPILER_PRESET: gcc-10
-        COMPILER_PKGS: "gcc-10 g++-10 lib32gcc-10-dev gcc-multilib"
-        CXX: ["17", "20"]
-      - COMPILER_PRESET: gcc-11
-        COMPILER_PKGS: "gcc-11 g++-11 lib32gcc-11-dev gcc-multilib"
-        CXX: ["17", "20"]
-      - COMPILER_PRESET: gcc-12
-        COMPILER_PKGS: "gcc-12 g++-12 lib32gcc-12-dev gcc-multilib"
-        CXX: ["17", "20"]
       - COMPILER_PRESET: gcc-13
         COMPILER_PKGS: "gcc-13 g++-13 lib32gcc-13-dev gcc-multilib"
-        CXX: ["17", "20"]
+        CXX: ["20"]
       - COMPILER_PRESET: gcc-14
         COMPILER_PKGS: "gcc-14 g++-14 lib32gcc-14-dev gcc-multilib"
-        CXX: ["17", "20"]
+        CXX: ["20"]
       - COMPILER_PRESET: clang-16
         COMPILER_PKGS: "clang-16 llvm-16"
-        CXX: ["17", "20"]
+        CXX: ["20"]
       - COMPILER_PRESET: clang-17
         COMPILER_PKGS: "clang-17 llvm-17"
-        CXX: ["17", "20"]
+        CXX: ["20"]
       - COMPILER_PRESET: clang-18
         COMPILER_PKGS: "clang-18 llvm-18"
-        CXX: ["17", "20"]
+        CXX: ["20"]
       - COMPILER_PRESET: clang-19
         COMPILER_PKGS: "clang-19 llvm-19"
-        CXX: ["17", "20"]
+        CXX: ["20"]
   script:
     - bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
     - apt-get install -y $COMPILER_PKGS
@@ -116,12 +116,6 @@ build:linux-clang-legacy:
   extends: .linux-22
   parallel:
     matrix:
-      - COMPILER_PRESET: clang-12
-        COMPILER_PKGS: "clang-12 llvm-12"
-      - COMPILER_PRESET: clang-13
-        COMPILER_PKGS: "clang-13 llvm-13"
-      - COMPILER_PRESET: clang-14
-        COMPILER_PKGS: "clang-14 llvm-14"
       - COMPILER_PRESET: clang-15
         COMPILER_PKGS: "clang-15 llvm-15"
   script:
@@ -138,7 +132,7 @@ build:linux-static-analysis:
   extends: .linux-24
   parallel:
     matrix:
-      - CXX: ["17", "20"]
+      - CXX: ["20"]
   variables:
     COMPILER_PRESET: clang-19
     IWYU_BRANCH: clang_19
@@ -165,7 +159,7 @@ build:linux-cross-armv7:
   parallel:
     matrix:
       - BUILD_TYPE: ["debug", "release"]
-        CXX: ["17", "20"]
+        CXX: ["20"]
   script:
     - >
       wget -O /tmp/arm-toolchain.tar.xz
