@@ -41,7 +41,7 @@ class CppExampleProjectConan(ConanFile):
         "use_open62541": True,
         "use_open62541pp": True,
         "use_slint": True,
-        "use_imgui": True,
+        "use_imgui": False,
         # library-level options
         "fmt/*:header_only": True,
         "spdlog/*:header_only": True,
