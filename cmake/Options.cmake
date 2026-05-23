@@ -59,27 +59,27 @@ option(CPP_STARTER_USE_GTEST "Enable compilation of an example test project usin
 # Without this, the conanfile.py default options are used, which leaves
 # optional packages like ImGui uninstalled even when their CMake flag is ON.
 # ---------------------------------------------------------------------------
-set(_conan_feature_map
-    "use_sml;CPP_STARTER_USE_SML"
-    "use_boost_beast;CPP_STARTER_USE_BOOST_BEAST"
-    "use_crow;CPP_STARTER_USE_CROW"
-    "use_cppzmq_proto;CPP_STARTER_USE_CPPZMQ_PROTO"
-    "use_qt;CPP_STARTER_USE_QT"
-    "use_open62541;CPP_STARTER_USE_OPEN62541"
-    "use_open62541pp;CPP_STARTER_USE_OPEN62541PP"
-    "use_slint;CPP_STARTER_USE_SLINT"
-    "use_imgui;CPP_STARTER_USE_IMGUI"
+foreach(_pair IN ITEMS
+    "use_sml:CPP_STARTER_USE_SML"
+    "use_boost_beast:CPP_STARTER_USE_BOOST_BEAST"
+    "use_crow:CPP_STARTER_USE_CROW"
+    "use_cppzmq_proto:CPP_STARTER_USE_CPPZMQ_PROTO"
+    "use_qt:CPP_STARTER_USE_QT"
+    "use_open62541:CPP_STARTER_USE_OPEN62541"
+    "use_open62541pp:CPP_STARTER_USE_OPEN62541PP"
+    "use_slint:CPP_STARTER_USE_SLINT"
+    "use_imgui:CPP_STARTER_USE_IMGUI"
 )
-foreach(_pair IN LISTS _conan_feature_map)
-    list(GET _pair 0 _conan_opt)
-    list(GET _pair 1 _cmake_var)
+    string(REPLACE ":" ";" _pair_list "${_pair}")
+    list(GET _pair_list 0 _conan_opt)
+    list(GET _pair_list 1 _cmake_var)
     if(${_cmake_var})
         list(APPEND CONAN_INSTALL_ARGS "-o" "&:${_conan_opt}=True")
     else()
         list(APPEND CONAN_INSTALL_ARGS "-o" "&:${_conan_opt}=False")
     endif()
 endforeach()
-unset(_conan_feature_map)
 unset(_pair)
+unset(_pair_list)
 unset(_conan_opt)
 unset(_cmake_var)
