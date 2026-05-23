@@ -1,66 +1,66 @@
-FUNCTION(ENABLE_SANITIZERS project_name)
+function(enable_sanitizers project_name)
 
-    IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 
-        IF(ENABLE_COVERAGE)
-            TARGET_COMPILE_OPTIONS(${project_name} INTERFACE
+        if(ENABLE_COVERAGE)
+            target_compile_options(${project_name} INTERFACE
                 $<$<COMPILE_LANGUAGE:CXX>:--coverage>
                 $<$<COMPILE_LANGUAGE:CXX>:-O0>
                 $<$<COMPILE_LANGUAGE:CXX>:-g>)
-            TARGET_LINK_LIBRARIES(${project_name} INTERFACE --coverage)
-        ENDIF()
+            target_link_libraries(${project_name} INTERFACE --coverage)
+        endif()
 
-        SET(SANITIZERS "")
+        set(SANITIZERS "")
 
-        IF(ENABLE_SANITIZER_ADDRESS)
-            LIST(APPEND SANITIZERS "address")
-        ENDIF()
+        if(ENABLE_SANITIZER_ADDRESS)
+            list(APPEND SANITIZERS "address")
+        endif()
 
-        IF(ENABLE_SANITIZER_LEAK)
-            LIST(APPEND SANITIZERS "leak")
-        ENDIF()
+        if(ENABLE_SANITIZER_LEAK)
+            list(APPEND SANITIZERS "leak")
+        endif()
 
-        IF(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR)
-            LIST(APPEND SANITIZERS "undefined")
-        ENDIF()
+        if(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR)
+            list(APPEND SANITIZERS "undefined")
+        endif()
 
-        IF(ENABLE_SANITIZER_THREAD)
-            IF("address" IN_LIST SANITIZERS OR "leak" IN_LIST SANITIZERS)
-                MESSAGE(WARNING "Thread sanitizer does not work with Address and Leak sanitizer enabled")
-            ELSE()
-                LIST(APPEND SANITIZERS "thread")
-            ENDIF()
-        ENDIF()
+        if(ENABLE_SANITIZER_THREAD)
+            if("address" IN_LIST SANITIZERS OR "leak" IN_LIST SANITIZERS)
+                message(WARNING "Thread sanitizer does not work with Address and Leak sanitizer enabled")
+            else()
+                list(APPEND SANITIZERS "thread")
+            endif()
+        endif()
 
-        IF(ENABLE_SANITIZER_MEMORY AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-            IF("address" IN_LIST SANITIZERS
+        if(ENABLE_SANITIZER_MEMORY AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+            if("address" IN_LIST SANITIZERS
                OR "thread" IN_LIST SANITIZERS
                OR "leak" IN_LIST SANITIZERS)
-                MESSAGE(WARNING "Memory sanitizer does not work with Address, Thread and Leak sanitizer enabled")
-            ELSE()
-                LIST(APPEND SANITIZERS "memory")
-            ENDIF()
-        ENDIF()
+                message(WARNING "Memory sanitizer does not work with Address, Thread and Leak sanitizer enabled")
+            else()
+                list(APPEND SANITIZERS "memory")
+            endif()
+        endif()
 
-        LIST(JOIN SANITIZERS "," LIST_OF_SANITIZERS)
+        list(JOIN SANITIZERS "," LIST_OF_SANITIZERS)
 
-        IF(LIST_OF_SANITIZERS)
-            TARGET_COMPILE_OPTIONS(${project_name} INTERFACE -fsanitize=${LIST_OF_SANITIZERS})
-            TARGET_LINK_OPTIONS(${project_name} INTERFACE -fsanitize=${LIST_OF_SANITIZERS})
-        ENDIF()
+        if(LIST_OF_SANITIZERS)
+            target_compile_options(${project_name} INTERFACE -fsanitize=${LIST_OF_SANITIZERS})
+            target_link_options(${project_name} INTERFACE -fsanitize=${LIST_OF_SANITIZERS})
+        endif()
 
-    ELSEIF(MSVC)
+    elseif(MSVC)
 
-        IF(ENABLE_SANITIZER_ADDRESS)
-            MESSAGE(STATUS "Enabling MSVC AddressSanitizer (/fsanitize=address)")
-            TARGET_COMPILE_OPTIONS(${project_name} INTERFACE /fsanitize=address)
-            TARGET_LINK_OPTIONS(${project_name} INTERFACE /INCREMENTAL:NO)
-        ENDIF()
-        IF(ENABLE_SANITIZER_LEAK OR ENABLE_SANITIZER_UNDEFINED_BEHAVIOR OR
+        if(ENABLE_SANITIZER_ADDRESS)
+            message(STATUS "Enabling MSVC AddressSanitizer (/fsanitize=address)")
+            target_compile_options(${project_name} INTERFACE /fsanitize=address)
+            target_link_options(${project_name} INTERFACE /INCREMENTAL:NO)
+        endif()
+        if(ENABLE_SANITIZER_LEAK OR ENABLE_SANITIZER_UNDEFINED_BEHAVIOR OR
            ENABLE_SANITIZER_THREAD OR ENABLE_SANITIZER_MEMORY)
-            MESSAGE(WARNING "MSVC only supports AddressSanitizer; other sanitizer options are ignored.")
-        ENDIF()
+            message(WARNING "MSVC only supports AddressSanitizer; other sanitizer options are ignored.")
+        endif()
 
-    ENDIF()
+    endif()
 
-ENDFUNCTION()
+endfunction()

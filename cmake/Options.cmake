@@ -1,32 +1,32 @@
-INCLUDE(CMakeDependentOption)
+include(CMakeDependentOption)
 cmake_dependent_option(ENABLE_BUILD_WITH_TIME_TRACE
     "Enable -ftime-trace to generate time tracing .json files on clang"
     OFF "NOT MSVC" OFF)
 
 # Very basic PCH example
-OPTION(ENABLE_PCH "Enable Precompiled Headers" OFF)
+option(ENABLE_PCH "Enable Precompiled Headers" OFF)
 
 # static analyzers
-OPTION(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
-OPTION(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
-OPTION(ENABLE_INCLUDE_WHAT_YOU_USE "Enable static analysis with include-what-you-use" OFF)
+option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
+option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
+option(ENABLE_INCLUDE_WHAT_YOU_USE "Enable static analysis with include-what-you-use" OFF)
 
 # tooling
-OPTION(ENABLE_CACHE "Enable cache if available" ON)
-OPTION(ENABLE_DOXYGEN "Enable doxygen doc builds of source" OFF)
+option(ENABLE_CACHE "Enable cache if available" ON)
+option(ENABLE_DOXYGEN "Enable doxygen doc builds of source" OFF)
 
 # Sanitizers
-OPTION(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR "Enable undefined behavior sanitizer" OFF)
-OPTION(ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
-OPTION(ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
+option(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR "Enable undefined behavior sanitizer" OFF)
+option(ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
+option(ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
 
 # others
-OPTION(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
-OPTION(ENABLE_IPO "Enable Interprocedural Optimization, aka Link Time Optimization (LTO)" OFF)
-OPTION(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
-OPTION(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-OPTION(ENABLE_TESTING "Enable Test Builds" ON)
-OPTION(ENABLE_FUZZING "Enable Fuzzing Builds" OFF)
+option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
+option(ENABLE_IPO "Enable Interprocedural Optimization, aka Link Time Optimization (LTO)" OFF)
+option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
+option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
+option(ENABLE_TESTING "Enable Test Builds" ON)
+option(ENABLE_FUZZING "Enable Fuzzing Builds" OFF)
 
 # Sanitizer mutual-exclusion guards
 cmake_dependent_option(ENABLE_SANITIZER_THREAD
@@ -37,17 +37,17 @@ cmake_dependent_option(ENABLE_SANITIZER_MEMORY
     OFF "NOT ENABLE_SANITIZER_ADDRESS;NOT ENABLE_SANITIZER_THREAD;NOT ENABLE_SANITIZER_LEAK" OFF)
 
 # examples
-OPTION(CPP_STARTER_USE_SML "Enable compilation of SML sample" OFF)
-OPTION(CPP_STARTER_USE_BOOST_BEAST "Enable compilation of boost beast sample" OFF)
-OPTION(CPP_STARTER_USE_CROW "Enable compilation of crow sample" OFF)
-OPTION(CPP_STARTER_USE_CPPZMQ_PROTO "Enable compilation of protobuf and cppzmq sample" OFF)
-OPTION(CPP_STARTER_USE_EMBEDDED_TOOLCHAIN "Enable compilation of an example cortex m4 project" OFF)
-OPTION(CPP_STARTER_USE_QT "Enable compilation of an example QT project" OFF)
-OPTION(CPP_STARTER_USE_OPEN62541PP "Enable compilation of an example open62541pp wrapper project" OFF)
-OPTION(CPP_STARTER_USE_OPEN62541 "Enable compilation of an example open62541 project" OFF)
-OPTION(CPP_STARTER_USE_SLINT "Enable compilation of an example slint project" OFF)
-OPTION(CPP_STARTER_USE_IMGUI "Enable compilation of an example imgui project" OFF)
+option(CPP_STARTER_USE_SML "Enable compilation of SML sample" OFF)
+option(CPP_STARTER_USE_BOOST_BEAST "Enable compilation of boost beast sample" OFF)
+option(CPP_STARTER_USE_CROW "Enable compilation of crow sample" OFF)
+option(CPP_STARTER_USE_CPPZMQ_PROTO "Enable compilation of protobuf and cppzmq sample" OFF)
+option(CPP_STARTER_USE_EMBEDDED_TOOLCHAIN "Enable compilation of an example cortex m4 project" OFF)
+option(CPP_STARTER_USE_QT "Enable compilation of an example QT project" OFF)
+option(CPP_STARTER_USE_OPEN62541PP "Enable compilation of an example open62541pp wrapper project" OFF)
+option(CPP_STARTER_USE_OPEN62541 "Enable compilation of an example open62541 project" OFF)
+option(CPP_STARTER_USE_SLINT "Enable compilation of an example slint project" OFF)
+option(CPP_STARTER_USE_IMGUI "Enable compilation of an example imgui project" OFF)
 
 # test frameworks
-OPTION(CPP_STARTER_USE_CATCH2 "Enable compilation of an example test project using catch2" ON)
-OPTION(CPP_STARTER_USE_GTEST "Enable compilation of an example test project using googletest" ON)
+option(CPP_STARTER_USE_CATCH2 "Enable compilation of an example test project using catch2" ON)
+option(CPP_STARTER_USE_GTEST "Enable compilation of an example test project using googletest" ON)

@@ -2,9 +2,9 @@
 #
 # https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
-FUNCTION(SET_PROJECT_WARNINGS project_name)
+function(set_project_warnings project_name)
 
-    SET(MSVC_WARNINGS
+    set(MSVC_WARNINGS
         /W4 # Baseline reasonable warnings
         /w14242 # 'identifier': conversion from 'type1' to 'type1', possible loss of data
         /w14254 # 'operator': conversion from 'type1:field_bits' to 'type2:field_bits', possible loss of data
@@ -30,7 +30,7 @@ FUNCTION(SET_PROJECT_WARNINGS project_name)
         /permissive- # standards conformance mode for MSVC compiler.
         )
 
-    SET(CLANG_WARNINGS
+    set(CLANG_WARNINGS
         -Wall
         -Wextra # reasonable and standard
         -Wshadow # warn the user if a variable declaration shadows one from a parent context
@@ -49,7 +49,7 @@ FUNCTION(SET_PROJECT_WARNINGS project_name)
         -Wimplicit-fallthrough # warn on implicit fallthrough in switch statements
         )
 
-    SET(GCC_WARNINGS
+    set(GCC_WARNINGS
         ${CLANG_WARNINGS}
         -Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
         -Wduplicated-cond # warn if if / else chain has duplicated conditions
@@ -59,21 +59,21 @@ FUNCTION(SET_PROJECT_WARNINGS project_name)
         -Wno-interference-size # suppress noisy C++17/20 ABI warning on GCC >= 12
         )
 
-    IF(MSVC)
-        SET(PROJECT_WARNINGS ${MSVC_WARNINGS})
-    ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-        SET(PROJECT_WARNINGS ${CLANG_WARNINGS})
-    ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        SET(PROJECT_WARNINGS ${GCC_WARNINGS})
-    ELSE()
-        MESSAGE(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
-    ENDIF()
+    if(MSVC)
+        set(PROJECT_WARNINGS ${MSVC_WARNINGS})
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+        set(PROJECT_WARNINGS ${CLANG_WARNINGS})
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(PROJECT_WARNINGS ${GCC_WARNINGS})
+    else()
+        message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
+    endif()
 
-    IF(WARNINGS_AS_ERRORS)
-        LIST(APPEND PROJECT_WARNINGS $<IF:$<CXX_COMPILER_ID:MSVC>,/WX,-Werror>)
-    ENDIF()
+    if(WARNINGS_AS_ERRORS)
+        list(APPEND PROJECT_WARNINGS $<IF:$<CXX_COMPILER_ID:MSVC>,/WX,-Werror>)
+    endif()
 
-    TARGET_COMPILE_OPTIONS(${project_name} INTERFACE
+    target_compile_options(${project_name} INTERFACE
         $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS}>)
 
-ENDFUNCTION()
+endfunction()

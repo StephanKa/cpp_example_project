@@ -1,7 +1,7 @@
-IF(CPP_STARTER_USE_CATCH2)
-    ADD_SUBDIRECTORY(catch2)
-ENDIF()
+if(CPP_STARTER_USE_CATCH2)
+    add_subdirectory(catch2)
+endif()
 
-IF(CPP_STARTER_USE_GTEST)
-    ADD_SUBDIRECTORY(gtest)
-ENDIF()
+if(CPP_STARTER_USE_GTEST)
+    add_subdirectory(gtest)
+endif()

@@ -1,32 +1,32 @@
-# find a subtring from a string by a given prefix such as VCVARSALL_ENV_START
-FUNCTION(
+# find a substring from a string by a given prefix such as VCVARSALL_ENV_START
+function(
         find_substring_by_prefix
         output
         prefix
         input)
     # find the prefix
-    STRING(FIND "${input}" "${prefix}" prefix_index)
-    IF("${prefix_index}" STREQUAL "-1")
-        MESSAGE(SEND_ERROR "Could not find ${prefix} in ${input}")
-    ENDIF()
+    string(FIND "${input}" "${prefix}" prefix_index)
+    if("${prefix_index}" STREQUAL "-1")
+        message(SEND_ERROR "Could not find ${prefix} in ${input}")
+    endif()
     # find the start index
-    STRING(LENGTH "${prefix}" prefix_length)
-    MATH(EXPR start_index "${prefix_index} + ${prefix_length}")
+    string(LENGTH "${prefix}" prefix_length)
+    math(EXPR start_index "${prefix_index} + ${prefix_length}")
 
-    STRING(
+    string(
             SUBSTRING "${input}"
             "${start_index}"
             "-1"
             _output)
-    SET("${output}"
+    set("${output}"
         "${_output}"
         PARENT_SCOPE)
-ENDFUNCTION()
+endfunction()
 
 # A function to set environment variables of CMake from the output of `cmd /c set`
-FUNCTION(SET_ENV_FROM_STRING env_string)
+function(set_env_from_string env_string)
     # replace ; in paths with __sep__ so we can split on ;
-    STRING(
+    string(
             REGEX
             REPLACE ";"
             "__sep__"
@@ -34,38 +34,38 @@ FUNCTION(SET_ENV_FROM_STRING env_string)
             "${env_string}")
 
     # the variables are separated by \r?\n
-    STRING(
+    string(
             REGEX
             REPLACE "\r?\n"
             ";"
             env_list
             "${env_string_sep_added}")
 
-    FOREACH(env_var ${env_list})
+    foreach(env_var ${env_list})
         # split by =
-        STRING(
+        string(
                 REGEX
                 REPLACE "="
                 ";"
                 env_parts
                 "${env_var}")
 
-        LIST(LENGTH env_parts env_parts_length)
-        IF("${env_parts_length}" EQUAL "2")
+        list(LENGTH env_parts env_parts_length)
+        if("${env_parts_length}" EQUAL "2")
             # get the variable name and value
-            LIST(
+            list(
                     GET
                     env_parts
                     0
                     env_name)
-            LIST(
+            list(
                     GET
                     env_parts
                     1
                     env_value)
 
             # recover ; in paths
-            STRING(
+            string(
                     REGEX
                     REPLACE "__sep__"
                     ";"
@@ -73,67 +73,67 @@ FUNCTION(SET_ENV_FROM_STRING env_string)
                     "${env_value}")
 
             # set env_name to env_value
-            SET(ENV{${env_name}} "${env_value}")
+            set(ENV{${env_name}} "${env_value}")
 
             # update cmake program path
-            IF("${env_name}" EQUAL "PATH")
-                LIST(APPEND CMAKE_PROGRAM_PATH ${env_value})
-            ENDIF()
-        ENDIF()
-    ENDFOREACH()
-ENDFUNCTION()
+            if("${env_name}" EQUAL "PATH")
+                list(APPEND CMAKE_PROGRAM_PATH ${env_value})
+            endif()
+        endif()
+    endforeach()
+endfunction()
 
-FUNCTION(GET_ALL_TARGETS var)
-    SET(targets)
-    GET_ALL_TARGETS_RECURSIVE(targets ${CMAKE_CURRENT_SOURCE_DIR})
-    SET(${var}
+function(get_all_targets var)
+    set(targets)
+    get_all_targets_recursive(targets ${CMAKE_CURRENT_SOURCE_DIR})
+    set(${var}
         ${targets}
         PARENT_SCOPE)
-ENDFUNCTION()
+endfunction()
 
-FUNCTION(GET_ALL_INSTALLABLE_TARGETS var)
-    SET(targets)
-    GET_ALL_TARGETS(targets)
-    FOREACH(_target ${targets})
-        GET_TARGET_PROPERTY(_target_type ${_target} TYPE)
-        IF(NOT
+function(get_all_installable_targets var)
+    set(targets)
+    get_all_targets(targets)
+    foreach(_target ${targets})
+        get_target_property(_target_type ${_target} TYPE)
+        if(NOT
            ${_target_type}
            MATCHES
            ".*LIBRARY|EXECUTABLE")
-            LIST(REMOVE_ITEM targets ${_target})
-        ENDIF()
-    ENDFOREACH()
-    SET(${var}
+            list(REMOVE_ITEM targets ${_target})
+        endif()
+    endforeach()
+    set(${var}
         ${targets}
         PARENT_SCOPE)
-ENDFUNCTION()
+endfunction()
 
-MACRO(GET_ALL_TARGETS_RECURSIVE targets dir)
-    GET_PROPERTY(
+macro(get_all_targets_recursive targets dir)
+    get_property(
             subdirectories
             DIRECTORY ${dir}
             PROPERTY SUBDIRECTORIES)
-    FOREACH(subdir ${subdirectories})
-        GET_ALL_TARGETS_RECURSIVE(${targets} ${subdir})
-    ENDFOREACH()
+    foreach(subdir ${subdirectories})
+        get_all_targets_recursive(${targets} ${subdir})
+    endforeach()
 
-    GET_PROPERTY(
+    get_property(
             current_targets
             DIRECTORY ${dir}
             PROPERTY BUILDSYSTEM_TARGETS)
-    LIST(APPEND ${targets} ${current_targets})
-ENDMACRO()
+    list(APPEND ${targets} ${current_targets})
+endmacro()
 
-FUNCTION(IS_VERBOSE var)
-    IF("CMAKE_MESSAGE_LOG_LEVEL" STREQUAL "VERBOSE"
+function(is_verbose var)
+    if("CMAKE_MESSAGE_LOG_LEVEL" STREQUAL "VERBOSE"
        OR "CMAKE_MESSAGE_LOG_LEVEL" STREQUAL "DEBUG"
        OR "CMAKE_MESSAGE_LOG_LEVEL" STREQUAL "TRACE")
-        SET(${var}
+        set(${var}
             ON
             PARENT_SCOPE)
-    ELSE()
-        SET(${var}
+    else()
+        set(${var}
             OFF
             PARENT_SCOPE)
-    ENDIF()
-ENDFUNCTION()
+    endif()
+endfunction()

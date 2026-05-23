@@ -1,31 +1,31 @@
 # Set a default build type if none was specified
-IF(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    MESSAGE(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
-    SET(CMAKE_BUILD_TYPE
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to 'RelWithDebInfo' as none was specified.")
+    set(CMAKE_BUILD_TYPE
         RelWithDebInfo
         CACHE STRING "Choose the type of build." FORCE)
     # Set the possible values of build type for cmake-gui, ccmake
-    SET_PROPERTY(
+    set_property(
             CACHE CMAKE_BUILD_TYPE
             PROPERTY STRINGS
             "Debug"
             "Release"
             "MinSizeRel"
             "RelWithDebInfo")
-ENDIF()
+endif()
 
 # Generate compile_commands.json to make it easier to work with clang based tools
-SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
-IF(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-    ADD_COMPILE_OPTIONS($<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>)
-ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    ADD_COMPILE_OPTIONS($<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>)
-ELSE()
-    MESSAGE(STATUS "No colored compiler diagnostic set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
-ENDIF()
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>)
+else()
+    message(STATUS "No colored compiler diagnostic set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
+endif()
 
-IF(MSVC)
-    SET(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-ENDIF()
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()

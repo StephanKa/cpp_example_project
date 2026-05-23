@@ -1,70 +1,70 @@
 # SML
-IF(CMAKE_CROSSCOMPILING)
-    IF(CPP_STARTER_USE_EMBEDDED_TOOLCHAIN)
-        MESSAGE("Using Embedded Toolchain")
-        ADD_SUBDIRECTORY(embedded)
-    ENDIF()
-    RETURN()
-ENDIF()
+if(CMAKE_CROSSCOMPILING)
+    if(CPP_STARTER_USE_EMBEDDED_TOOLCHAIN)
+        message(STATUS "Using Embedded Toolchain")
+        add_subdirectory(embedded)
+    endif()
+    return()
+endif()
 
-IF(CPP_STARTER_USE_SML)
-    MESSAGE("Using SML")
-    ADD_SUBDIRECTORY(sml)
-ENDIF()
+if(CPP_STARTER_USE_SML)
+    message(STATUS "Using SML")
+    add_subdirectory(sml)
+endif()
 
 # Boost Beast
-IF(CPP_STARTER_USE_BOOST_BEAST)
-    MESSAGE("Using Boost Beast")
-    ADD_SUBDIRECTORY(boost.beast)
-ENDIF()
+if(CPP_STARTER_USE_BOOST_BEAST)
+    message(STATUS "Using Boost Beast")
+    add_subdirectory(boost.beast)
+endif()
 
 # Crow
-IF(CPP_STARTER_USE_CROW)
-    MESSAGE("Using Crow")
-    ADD_SUBDIRECTORY(crow)
-ENDIF()
+if(CPP_STARTER_USE_CROW)
+    message(STATUS "Using Crow")
+    add_subdirectory(crow)
+endif()
 
 # CPPZMQ & Protobuf
-IF(CPP_STARTER_USE_CPPZMQ_PROTO)
-    MESSAGE("Using CPPZMQ & Protobuf")
-    ADD_SUBDIRECTORY(protobuf.cppzmq)
-ENDIF()
+if(CPP_STARTER_USE_CPPZMQ_PROTO)
+    message(STATUS "Using CPPZMQ & Protobuf")
+    add_subdirectory(protobuf.cppzmq)
+endif()
 
 # QT example
-IF(CPP_STARTER_USE_QT)
-    MESSAGE("Using QT")
-    ADD_SUBDIRECTORY(qt)
-ENDIF()
+if(CPP_STARTER_USE_QT)
+    message(STATUS "Using QT")
+    add_subdirectory(qt)
+endif()
 
 # open62541pp example
-IF(CPP_STARTER_USE_OPEN62541PP)
-    MESSAGE("Using open62541pp")
-    ADD_SUBDIRECTORY(open62541pp)
-ENDIF()
+if(CPP_STARTER_USE_OPEN62541PP)
+    message(STATUS "Using open62541pp")
+    add_subdirectory(open62541pp)
+endif()
 
 # open62541 example
-IF(CPP_STARTER_USE_OPEN62541)
-    MESSAGE("Using open62541")
-    ADD_SUBDIRECTORY(open62541)
-ENDIF()
+if(CPP_STARTER_USE_OPEN62541)
+    message(STATUS "Using open62541")
+    add_subdirectory(open62541)
+endif()
 
 # slint example
-IF(CPP_STARTER_USE_SLINT)
-    MESSAGE("Using slint")
-    ADD_SUBDIRECTORY(slint)
-ENDIF()
+if(CPP_STARTER_USE_SLINT)
+    message(STATUS "Using slint")
+    add_subdirectory(slint)
+endif()
 
 # imgui example
-IF(CPP_STARTER_USE_IMGUI)
-    MESSAGE("Using imgui")
-    ADD_SUBDIRECTORY(imgui)
-ENDIF()
+if(CPP_STARTER_USE_IMGUI)
+    message(STATUS "Using imgui")
+    add_subdirectory(imgui)
+endif()
 
-FIND_PACKAGE(spdlog REQUIRED)
-FIND_PACKAGE(fmt REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(fmt REQUIRED)
 # Generic test that uses conan libs
-ADD_EXECUTABLE(intro main.cpp)
-TARGET_LINK_LIBRARIES(
+add_executable(intro main.cpp)
+target_link_libraries(
         intro
         PRIVATE project_options
         project_warnings
@@ -72,4 +72,4 @@ TARGET_LINK_LIBRARIES(
         fmt::fmt-header-only
         spdlog::spdlog_header_only)
 
-TARGET_INCLUDE_DIRECTORIES(intro PRIVATE ${CMAKE_BINARY_DIR}/generated)
+target_include_directories(intro PRIVATE ${CMAKE_BINARY_DIR}/generated)
