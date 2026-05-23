@@ -83,3 +83,13 @@ unset(_pair)
 unset(_pair_list)
 unset(_conan_opt)
 unset(_cmake_var)
+
+# On GitHub Actions runners the OpenGL/X11 system headers needed by packages
+# like ImGui are not pre-installed.  Allow Conan to install them via apt by
+# switching the package-manager mode from the default 'check' to 'install'.
+# The GITHUB_ACTIONS env-var is set automatically on every GitHub runner, so
+# this has no effect on local developer machines.
+if(DEFINED ENV{GITHUB_ACTIONS} AND UNIX AND NOT APPLE)
+    list(APPEND CONAN_INSTALL_ARGS "-c" "tools.system.package_manager:mode=install")
+    list(APPEND CONAN_INSTALL_ARGS "-c" "tools.system.package_manager:sudo=True")
+endif()
