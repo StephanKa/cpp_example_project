@@ -206,3 +206,6 @@ The container ships with all required compilers (GCC, Clang), CMake, Conan, clan
 3. Wire it in `src/CMakeLists.txt` with a matching `if(CPP_STARTER_USE_<NAME>)` block.
 4. Add a corresponding Conan option in `conanfile.py` if external dependencies are needed.
 5. Document the example in `README.md`.
+6. Register the example in `scripts/customize-project.py` by adding a new entry to the `EXAMPLES` list with the matching `key`, `label`, `cmake_var`, `src_dir`, and `conan_opt` fields.
+
+> **Maintenance note:** Whenever the example sub-project structure changes — new examples added, existing ones renamed/removed, test frameworks added, or the layout of `cmake/Options.cmake`, `src/CMakeLists.txt`, or `conanfile.py` changes — `scripts/customize-project.py` must be updated accordingly so that the prune and configure modes stay in sync with the project.
