@@ -27,8 +27,8 @@ class CppExampleProjectConan(ConanFile):
         "use_cppzmq_proto": [True, False],
         "use_qt": [True, False],
         "use_open62541": [True, False],
-        "use_open62541pp": [True, False],  # fetched via FetchContent in CMake
-        "use_slint": [True, False],         # fetched via FetchContent in CMake
+        "use_open62541pp": [True, False], # fetched via FetchContent in CMake
+        "use_slint": [True, False], # fetched via FetchContent in CMake
         "use_imgui": [True, False],
     }
 
@@ -46,9 +46,9 @@ class CppExampleProjectConan(ConanFile):
         "fmt/*:header_only": True,
         "spdlog/*:header_only": True,
         "qt/*:with_fontconfig": False,
-        "qt/*:qtdeclarative": True,       # QML + Quick
-        "qt/*:qtshadertools": True,        # required by QtQuick
-        "qt/*:qtquickcontrols2": True,     # ApplicationWindow, Button, etc.
+        "qt/*:qtdeclarative": True, # QML + Quick
+        "qt/*:qtshadertools": True, # required by QtQuick
+        "qt/*:qtquickcontrols2": True, # ApplicationWindow, Button, etc.
         "open62541/*:cpp_compatible": True,
     }
 
