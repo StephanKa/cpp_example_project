@@ -1,3 +1,4 @@
+import glob
 import os
 from dataclasses import dataclass
 
@@ -145,16 +146,15 @@ class CppExampleProjectConan(ConanFile):
 
         tc.generate()
 
-        # open62541's installed CMake config exports an ALIAS target (open62541::open62541).
-        # Conan's CMakeDeps wrapper blindly calls set_property() on that ALIAS, which CMake
-        # forbids. Using cmake_find_mode="none" bypasses the broken wrapper and lets CMake
-        # use open62541's own config files directly (already on CMAKE_PREFIX_PATH via
-        # CMakeToolchain).
+        # Conan's CMakeDeps generator creates open62541::open62541 as an ALIAS of the real
+        # open62541 IMPORTED target, then generates set_property() calls on that ALIAS.
+        # CMake forbids set_property() on ALIAS targets, so we post-process the generated
+        # files to redirect those calls to the real underlying target.
         deps = CMakeDeps(self)
+        deps.generate()
         if self.settings.arch != "armv7" and not self.options.use_qt:
             if self.options.use_open62541 or self.options.use_open62541pp:
-                deps.set_property("open62541", "cmake_find_mode", "none")
-        deps.generate()
+                self._patch_open62541_alias_targets()
 
         # Copy imgui backend bindings into the include path
         if self.options.use_imgui and "imgui" in self.dependencies:
@@ -177,3 +177,19 @@ class CppExampleProjectConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+
+    def _patch_open62541_alias_targets(self):
+        """Conan's CMakeDeps creates open62541::open62541 as an ALIAS of the real
+        IMPORTED target open62541, then generates set_property() calls on that ALIAS.
+        CMake forbids set_property() on ALIAS targets (hard error since CMake 4.0).
+        This method rewrites those calls to target the real underlying target."""
+        for path in glob.glob(os.path.join(self.generators_folder, "open62541-Target-*.cmake")):
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read()
+            patched = content.replace(
+                "set_property(TARGET open62541::open62541 ",
+                "set_property(TARGET open62541 ",
+            )
+            if patched != content:
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(patched)
