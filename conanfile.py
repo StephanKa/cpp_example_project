@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain, cmake_layout, CMake
+from conan.tools.cmake import CMakeToolchain, CMakeDeps, cmake_layout, CMake
 from conan.tools.files import get, copy, download
 
 
@@ -18,7 +18,7 @@ class CppExampleProjectConan(ConanFile):
     version = "0.0.1"
     name = "cpp_example_project"
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps"
+    generators = []
 
     options = {
         "use_sml": [True, False],
@@ -144,6 +144,17 @@ class CppExampleProjectConan(ConanFile):
             tc.cache_variables["CPP_STARTER_USE_QT"] = True
 
         tc.generate()
+
+        # open62541's installed CMake config exports an ALIAS target (open62541::open62541).
+        # Conan's CMakeDeps wrapper blindly calls set_property() on that ALIAS, which CMake
+        # forbids. Using cmake_find_mode="none" bypasses the broken wrapper and lets CMake
+        # use open62541's own config files directly (already on CMAKE_PREFIX_PATH via
+        # CMakeToolchain).
+        deps = CMakeDeps(self)
+        if self.settings.arch != "armv7" and not self.options.use_qt:
+            if self.options.use_open62541 or self.options.use_open62541pp:
+                deps.set_property("open62541", "cmake_find_mode", "none")
+        deps.generate()
 
         # Copy imgui backend bindings into the include path
         if self.options.use_imgui and "imgui" in self.dependencies:
