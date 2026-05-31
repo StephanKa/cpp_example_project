@@ -70,7 +70,8 @@ jobs:
       run:   |
              sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
              sudo apt update
-             sudo apt install ninja-build ${{ matrix.compiler.pkgs }} ccache
+             sudo apt install ninja-build ${{ matrix.compiler.pkgs }} ccache \
+                  libgl1-mesa-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
       shell: bash
 
     - name: Configure via CMake
@@ -126,7 +127,8 @@ jobs:
       run:   |
              sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
              sudo apt update
-             sudo apt install ninja-build ${{ matrix.compiler.pkgs }}  ccache
+             sudo apt install ninja-build ${{ matrix.compiler.pkgs }} ccache \
+                  libgl1-mesa-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
       shell: bash
 
     - name: Configure via CMake
@@ -176,7 +178,8 @@ jobs:
       run:   |
              sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
              sudo apt update
-             sudo apt install ninja-build ${{ matrix.compiler.pkgs }} cppcheck  ccache
+             sudo apt install ninja-build ${{ matrix.compiler.pkgs }} cppcheck ccache \
+                  libgl1-mesa-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
       shell: bash
 
     - name: Compile and install IWYU

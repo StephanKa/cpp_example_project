@@ -18,6 +18,12 @@ RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install --fix-missin
   doxygen \
   graphviz \
   git \
+  libgl1-mesa-dev \
+  libxcursor-dev \
+  libxext-dev \
+  libxi-dev \
+  libxinerama-dev \
+  libxrandr-dev \
   lsb-release \
   ninja-build \
   pipx \
