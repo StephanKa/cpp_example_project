@@ -1,5 +1,5 @@
-FIND_PACKAGE(sml REQUIRED)
-FIND_PACKAGE(spdlog REQUIRED)
+find_package(sml REQUIRED)
+find_package(spdlog REQUIRED)
 
-ADD_EXECUTABLE(test_sml main.cpp logger.h states.h events.h plantumlDump.h actions.h)
-TARGET_LINK_LIBRARIES(test_sml PRIVATE sml::sml spdlog::spdlog_header_only)
+add_executable(test_sml main.cpp logger.h states.h events.h plantumlDump.h actions.h)
+target_link_libraries(test_sml PRIVATE project_options project_warnings sml::sml spdlog::spdlog_header_only)

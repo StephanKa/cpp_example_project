@@ -1,7 +1,7 @@
-FIND_PACKAGE(open62541 REQUIRED)
+find_package(open62541 REQUIRED)
 
-ADD_EXECUTABLE(open62541_client client.cpp)
-TARGET_LINK_LIBRARIES(open62541_client PRIVATE open62541::open62541)
+add_executable(open62541_client client.cpp)
+target_link_libraries(open62541_client PRIVATE project_options project_warnings open62541::open62541)
 
-ADD_EXECUTABLE(open62541_server server.cpp)
-TARGET_LINK_LIBRARIES(open62541_server PRIVATE open62541::open62541)
+add_executable(open62541_server server.cpp)
+target_link_libraries(open62541_server PRIVATE project_options project_warnings open62541::open62541)

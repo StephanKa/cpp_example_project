@@ -6,7 +6,9 @@ if(ENABLE_CPPCHECK)
             --suppress=missingInclude
             --enable=all
             --inline-suppr
-            --inconclusive)
+            --inconclusive
+            --std=c++${CMAKE_CXX_STANDARD}
+            --check-level=exhaustive)
     else()
         message(SEND_ERROR "cppcheck requested but executable not found")
     endif()

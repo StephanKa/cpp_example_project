@@ -14,6 +14,10 @@ project(myproject
 include(cmake/ProjectSettings.cmake)
 include(cmake/Options.cmake)
 
+# Find Python interpreter for code formatting scripts
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+set(Python_EXECUTABLE ${Python3_EXECUTABLE})
+
 include(cmake/BuildingConfig.cmake)
 setup_multi_config()
 
@@ -31,6 +35,12 @@ configure_file("templates/version.hpp.in" "${CMAKE_BINARY_DIR}/generated/include
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+
+# Apply -ftime-trace for build profiling (Clang only)
+if(ENABLE_BUILD_WITH_TIME_TRACE)
+    target_compile_options(project_options INTERFACE -ftime-trace)
+endif()
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
 add_library(project_warnings INTERFACE)

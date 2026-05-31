@@ -1,15 +1,16 @@
 # A fuzz test runs until it finds an error. This particular one is going to rely on libFuzzer.
 #
 
+find_package(fmt REQUIRED)
+
 add_executable(fuzz_tester fuzz_tester.cpp)
 target_link_libraries(
         fuzz_tester
         PRIVATE project_options
         project_warnings
-        fmt::fmt-header-only
-        -coverage
-        -fsanitize=fuzzer,undefined,address)
-target_compile_options(fuzz_tester PRIVATE -fsanitize=fuzzer,undefined,address)
+        fmt::fmt-header-only)
+target_compile_options(fuzz_tester PRIVATE -fsanitize=fuzzer,undefined,address -fno-omit-frame-pointer)
+target_link_options(fuzz_tester PRIVATE -fsanitize=fuzzer,undefined,address --coverage)
 
 # Allow short runs during automated testing to see if something new breaks
 set(FUZZ_RUNTIME

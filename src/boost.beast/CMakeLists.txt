@@ -1,7 +1,7 @@
-FIND_PACKAGE(Threads)
-FIND_PACKAGE(fmt REQUIRED)
-FIND_PACKAGE(nlohmann_json REQUIRED)
-FIND_PACKAGE(Boost REQUIRED)
+find_package(Threads)
+find_package(fmt REQUIRED)
+find_package(nlohmann_json REQUIRED)
+find_package(Boost REQUIRED)
 
-ADD_EXECUTABLE(test_boost_beast main.cpp)
-TARGET_LINK_LIBRARIES(test_boost_beast PRIVATE ${CMAKE_THREAD_LIBS_INIT} Boost::boost nlohmann_json::nlohmann_json fmt::fmt-header-only)
+add_executable(test_boost_beast main.cpp)
+target_link_libraries(test_boost_beast PRIVATE project_options project_warnings ${CMAKE_THREAD_LIBS_INIT} Boost::boost nlohmann_json::nlohmann_json fmt::fmt-header-only)

@@ -47,6 +47,8 @@ function(set_project_warnings project_name)
         -Wdouble-promotion # warn if float is implicit promoted to double
         -Wformat=2 # warn on security issues around functions that format output (ie printf)
         -Wimplicit-fallthrough # warn on implicit fallthrough in switch statements
+        -Wself-move # warn on self-move that has no effect
+        -Wunused-lambda-capture # warn on unused lambda captures
         )
 
     set(GCC_WARNINGS
@@ -57,7 +59,13 @@ function(set_project_warnings project_name)
         -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
         -Wuseless-cast # warn if you perform a cast to the same type
         -Wno-interference-size # suppress noisy C++17/20 ABI warning on GCC >= 12
+        -Wsuggest-override # warn if virtual function overrides are missing the override keyword
         )
+
+    # GCC 13+ supports -Wdangling-reference for detecting dangling references to temporaries
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
+        list(APPEND GCC_WARNINGS -Wdangling-reference)
+    endif()
 
     if(MSVC)
         set(PROJECT_WARNINGS ${MSVC_WARNINGS})
